@@ -19,6 +19,8 @@ function App() {
   const [editId, setEditId] = useState(null);
   const [deadline, setDeadline] = useState("");
   const [filter, setFilter] = useState("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 4;
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -108,12 +110,25 @@ function App() {
     toast.success(`Cleared ${completedCount} completed task(s)!`);
   }
 
+  // Reset to page 1 when filter or todos change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, todos.length]);
+
   // Filter logic
   const filteredTodos = todos.filter((todo) => {
     if (filter === "ACTIVE") return !todo.completed;
     if (filter === "COMPLETED") return todo.completed;
     return true;
   });
+
+  // Pagination logic
+  const totalPages = Math.max(1, Math.ceil(filteredTodos.length / ITEMS_PER_PAGE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedTodos = filteredTodos.slice(
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE
+  );
 
   const completedCount = todos.filter((t) => t.completed).length;
   const totalCount = todos.length;
@@ -311,7 +326,7 @@ function App() {
               </div>
             ) : (
               <ul className="todo-list">
-                {filteredTodos.map((todo) => (
+                {paginatedTodos.map((todo) => (
                   <li
                     key={todo.id}
                     className={`todo-card ${todo.completed ? "completed-card" : ""}`}
@@ -365,6 +380,45 @@ function App() {
               </ul>
             )}
           </div>
+
+          {/* Pagination controls — only shown when there are multiple pages */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className="page-btn page-arrow"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safeCurrentPage === 1}
+                aria-label="Previous page"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`page-btn page-num ${safeCurrentPage === page ? "page-active" : ""}`}
+                  onClick={() => setCurrentPage(page)}
+                  aria-label={`Page ${page}`}
+                  aria-current={safeCurrentPage === page ? "page" : undefined}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                className="page-btn page-arrow"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safeCurrentPage === totalPages}
+                aria-label="Next page"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
       </div>
