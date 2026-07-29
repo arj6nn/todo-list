@@ -1,0 +1,94 @@
+:root {
+  --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-logo: 'Syne', sans-serif;
+
+  --color-bg-outer: #0a0614;
+  /* Deep dark purple-navy space background */
+  --color-bg-inner: #cfc4f6;
+  /* Light lavender-purple card background */
+  --color-text-dark: #190e38;
+  /* Rich dark indigo-purple text */
+  --color-text-muted: #53457e;
+  /* Medium lavender text */
+  --color-text-light: #ffffff;
+  /* White text */
+
+  /* Wave palette */
+  --color-purple-wave-1: #a291e9;
+  --color-purple-wave-2: #7e52d3;
+  --color-purple-wave-3: #3e1784;
+  --color-purple-wave-4: #190938;
+
+  --border-radius-outer: 40px;
+  --border-radius-inner: 24px;
+
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg-outer);
+  font-family: var(--font-sans);
+  color: var(--color-text-dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background grid details to mimic creative concept drafts */
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(rgba(207, 196, 246, 0.05) 1.5px, transparent 1.5px),
+    radial-gradient(rgba(207, 196, 246, 0.05) 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  #root {
+    padding: 10px 5px;
+  }
+}
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+}
